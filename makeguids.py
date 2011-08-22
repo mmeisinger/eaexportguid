@@ -5,9 +5,9 @@
 @author Michael Meisinger
 @brief Create guid named copies of EA export PNG files for permanent links
 """
-import os, os.path, re, shutil
+import os, os.path, re, shutil, sys
 
-BASE_DIR = "/Users/mmeisinger/Documents/Dev/EA/EA-Output R2LCO1"
+BASE_DIR = "."
 GUIDMAP_DIR = "js/data/guidmaps"
 OUTPUT_DIR = "guidpng"
 
@@ -30,8 +30,20 @@ def add_file(guidentry):
         shutil.copy(pngname,BASE_DIR+"/"+OUTPUT_DIR+"/"+guid+".png")
 
 def makeguids():
+    global BASE_DIR
     guids = []
-    print "Make guids"
+    print "makeguids.py - Create GUID diagram images from EA Export, M. Meisinger, Aug 2011"
+
+    if len(sys.argv) > 1:
+        BASE_DIR = sys.argv[1]
+
+    if os.path.exists(BASE_DIR+"/"+GUIDMAP_DIR):
+        print "Using dir:", BASE_DIR
+    else:
+        print "Dir", BASE_DIR, "does not contain EA export files"
+        sys.exit(1)
+
+
     [guids.extend(add_guidmap(item)) for item in os.listdir(BASE_DIR+"/"+GUIDMAP_DIR) if item.endswith(".xml")]
     #[it for sublist in [add_guidmap(item) for item in os.listdir(BASE_DIR+"/"+GUIDMAP_DIR) if item.endswith(".xml")] for it in sublist]
     #print guids
